@@ -15,5 +15,5 @@ actions:
   - {action: 'move_click', x: 939, y: 840, duration: 3}
   - {action: 'move_click', x: 777, y: 756, duration: 3}
   - {action: 'move_click', x: 1078, y: 993, duration: 3}
-  - {action: 'write', text: 'emails_extracted_10', interval: 0.05}
+  - {action: 'write', text: 'emails_extracted_5', interval: 0.05}
   - {action: 'move_click', x: 1476, y: 1066, duration: 3}

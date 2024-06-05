@@ -1,53 +1,50 @@
-import pyautogui  # Import the pyautogui library for controlling the mouse and keyboard
-import time  # Import the time library for adding delays
-import logging  # Import the logging library for logging information
-import yaml  # Import the yaml library for parsing YAML configuration files
-import smtplib  # Import the smtplib library for sending emails
-import argparse  # Import the argparse library for parsing command-line arguments
-from email.mime.text import MIMEText  # Import MIMEText for email text content
-from email.mime.multipart import MIMEMultipart  # Import MIMEMultipart for email multipart content
-from email.mime.application import MIMEApplication  # Import MIMEApplication for email attachments
+import pyautogui
+import time
+import logging
+import yaml
+import smtplib
+import argparse
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
+from PIL import Image
 
-# Configure logging to log messages to a file and the console
+# Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.getLogger().addHandler(logging.FileHandler('script.log'))
 
-# Parse command-line arguments for dynamic configuration
+# Parse command-line arguments
 parser = argparse.ArgumentParser(description='Automate mouse movements and send email notifications.')
 parser.add_argument('--config', type=str, default='config.yaml', help='Path to the configuration file')
 args = parser.parse_args()
 
-# Load configuration from the specified YAML file
+# Load configuration
 config_path = args.config
 with open(config_path, 'r') as file:
     config = yaml.safe_load(file)
 
 # Function to send email notifications
 def send_email(subject, body, attachments=[]):
-    sender_email = "oussamaayari2014@gmail.com"  # Your email address
-    receiver_email = "biwdymuof@emlhub.com"  # Recipient email address
-    password = "kcqd dpeu kqee vunm"  # Your email password or app-specific password
-    smtp_server = "smtp.gmail.com"  # SMTP server for sending the email
-    smtp_port = 465  # Port for SSL
+    sender_email = "oussamaayari2014@gmail.com"
+    receiver_email = "jnt8yyw9@spymail.one"
+    password = "kcqd dpeu kqee vunm"
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 465  # Update based on your provider
 
-    # Create a multipart email message
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = receiver_email
     msg['Subject'] = subject
 
-    # Attach the email body
     msg.attach(MIMEText(body, 'plain'))
 
-    # Attach any files to the email
     for file in attachments:
         with open(file, 'rb') as f:
             part = MIMEApplication(f.read(), Name=file)
         part['Content-Disposition'] = f'attachment; filename="{file}"'
         msg.attach(part)
 
-    # Retry sending the email up to 3 times in case of failure
-    for attempt in range(3):
+    for attempt in range(3):  # Retry mechanism
         try:
             if smtp_port == 465:
                 # Using SSL
@@ -57,7 +54,6 @@ def send_email(subject, body, attachments=[]):
                 server = smtplib.SMTP(smtp_server, smtp_port)
                 server.starttls()
             
-            # Log in to the SMTP server and send the email
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_email, msg.as_string())
             server.quit()
@@ -67,14 +63,20 @@ def send_email(subject, body, attachments=[]):
             logging.error(f'Failed to send email (attempt {attempt + 1}): {e}')
             time.sleep(5)  # Wait before retrying
 
-# Function to take a screenshot and log the action
+# Function to take and compress a screenshot
 def take_screenshot(step):
-    filename = f'screenshot_{step}.png'  # Filename for the screenshot
-    pyautogui.screenshot(filename)  # Take a screenshot
-    logging.info(f'Screenshot taken: {filename}')
-    return filename
+    filename = f'screenshot_{step}.png'
+    compressed_filename = f'compressed_screenshot_{step}.png'
+    pyautogui.screenshot(filename)
+    
+    # Compress the screenshot
+    img = Image.open(filename)
+    img.save(compressed_filename, optimize=True, quality=50)  # Adjust quality as needed
+    
+    logging.info(f'Compressed screenshot taken: {compressed_filename}')
+    return compressed_filename
 
-# Function to execute actions based on the configuration
+# Function to execute actions
 def execute_action(action, step):
     try:
         if action['action'] == 'move_click':
@@ -101,7 +103,7 @@ def execute_action(action, step):
         logging.error(f'Step {step}: Error executing action: {e}')
         return None
 
-# Execute actions defined in the configuration file
+# Execute actions from config
 screenshots = []
 for idx, action in enumerate(config['actions']):
     step = f'{idx + 1}'
@@ -111,5 +113,5 @@ for idx, action in enumerate(config['actions']):
 
 logging.info('Script finished')
 
-# Send an email with the screenshots attached
+# Send email with compressed screenshots
 send_email('Automation Script Completed', 'The automation script has completed successfully.', screenshots)
