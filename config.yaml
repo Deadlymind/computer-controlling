@@ -1,0 +1,19 @@
+actions:
+  - {action: 'move_click', x: 1808, y: 1418, duration: 3}
+  - {action: 'press', key: 'down', duration: 3}
+  - {action: 'hotkey', keys: ['ctrl', 'a'], duration: 3}
+  - {action: 'hotkey', keys: ['ctrl', 'c'], duration: 3}
+  - {action: 'move_click', x: 1808, y: 1418, duration: 3}
+  - {action: 'move_click', x: 263, y: 155, duration: 3}
+  - {action: 'hotkey', keys: ['ctrl', 'v'], duration: 3}
+  - {action: 'move_click', x: 465, y: 171, duration: 3}
+  - {action: 'move_click', x: 1680, y: 307, duration: 3}
+  - {action: 'move_click', x: 447, y: 1357, duration: 30}
+  - {action: 'move_click', x: 1305, y: 777, duration: 3}
+  - {action: 'move_click', x: 1603, y: 355, duration: 3}
+  - {action: 'move_click', x: 770, y: 630, duration: 3}
+  - {action: 'move_click', x: 939, y: 840, duration: 3}
+  - {action: 'move_click', x: 777, y: 756, duration: 3}
+  - {action: 'move_click', x: 1078, y: 993, duration: 3}
+  - {action: 'write', text: 'emails_extracted_10', interval: 0.05}
+  - {action: 'move_click', x: 1476, y: 1066, duration: 3}
